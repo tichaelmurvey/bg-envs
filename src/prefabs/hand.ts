@@ -4,12 +4,11 @@ import { IsPlayerProperty } from "../core/player";
 
 export class Hand extends IsPlayerProperty(Deck) {
     constructor(
-        name?: string,
-        items_init: Component[] = [],
+        public name?: string,
+        public items: Component[] = [],
     ) {
-        super(name, items_init)
-        this.secret = true
+        super(name, items)
         this.active = true
+        this.secret = true
     }
-
 }

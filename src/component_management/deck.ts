@@ -2,17 +2,10 @@ import Component from "../components/component";
 import { shuffle } from "../utils/rng";
 
 export class Deck {
-
-    items: Component[];
-    name: string | undefined;
-
     constructor(
-        name?: string,
-        items_init: Component[] = [],
-    ) {
-        this.name = name;
-        this.items = items_init
-    }
+        public name?: string,
+        public items: Component[] = [],
+    ) { }
 
     shuffle() {
         shuffle(this.items)

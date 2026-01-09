@@ -1,4 +1,10 @@
+import { ComponentManager } from "./component_management/types";
+import Component from "./components/component";
+
 export type LocationRef = string
+
+export type GameObject = Component | ComponentManager
+export type ComponentState = Record<string, GameObject>
 
 export enum PCardSuit {
     Hearts,

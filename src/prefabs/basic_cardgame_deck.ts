@@ -2,6 +2,17 @@ import { Deck } from "../component_management/deck"
 import Component from "../components/component";
 import Player from "../core/player";
 import BASIC_52 from "../data/basic_52";
+import { hasOwn } from "../utils/type_utils";
+import { Hand } from "./hand";
+import PlayingCard from "./playing_card";
+
+class CardHand extends Hand {
+    items: PlayingCard[] = []
+}
+
+interface CardHandPlayer extends Player {
+    hand: CardHand
+}
 
 export class BasicCardDeck extends Deck {
 
@@ -23,10 +34,11 @@ export class BasicCardDeck extends Deck {
         this.shuffle()
     }
 
-    deal(players: Player[]) {
+    deal(players: Array<CardHandPlayer>) {
         for (const player of players) {
-            if (!Object.hasOwn(player, "hand")) continue;
-            player.hand.add(this.draw())
+            if (player.hand) {
+                player.hand.add(this.draw())
+            }
         }
     }
 }
