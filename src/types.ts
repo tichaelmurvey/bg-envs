@@ -14,7 +14,7 @@ export enum PCardSuit {
 }
 
 export enum PCardVal {
-    Ace,
+    Ace = 1,
     Two,
     Three,
     Four,

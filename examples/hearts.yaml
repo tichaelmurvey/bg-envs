@@ -1,0 +1,56 @@
+meta:
+    name: hearts
+    player_min: 2
+    player_max: 7
+
+prefabs:
+    - base: card_game_tricks
+      follow_suit: true
+      aces_high: true
+      pass_lead_to: winner
+
+    - player_points:
+      trigger_game_end: 100
+      overflow: true
+      golf_rules: true
+
+phases:
+    - game_round:
+      loop: forever
+      phases:
+          - name: game_start
+            deal: all
+
+          - name: pass_cards
+            turn_order: simultaneous
+            allowed_moves:
+                - pass_three
+
+          - name: trick_play
+          - name: score_round:
+                - QUEEN of SPADES: 13
+                - each HEARTS: 1
+                - all HEARTS and QUEEN of SPADES:
+                      OTHER_PLAYERS: 26
+                      ME: 0
+
+custom_variables:
+    HEARTS_BROKEN: false
+
+custom_moves:
+    pass_three:
+        input: choose 3 CARDS as SELECTION
+        effect:
+            check: CURRENT_ROUND is ODD
+            true: from ME move SELECTION to LEFT_PLAYER
+            false: from ME move SELECTION to RIGHT_PLAYER
+
+custom_passives:
+    break_hearts:
+        trigger: CARD_PLAYED has SUIT of HEARTS
+        effect: HEARTS_BROKEN is true
+
+custom_blockers:
+    block_hearts_lead:
+        while: HEARTS_BROKEN is false
+        illegal: LEAD_CARD has SUIT of HEARTS

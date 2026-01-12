@@ -11,4 +11,5 @@ class GoFishPlayer extends Player {
 }
 
 const [deck, discard] = CardGameDeckSetup();
-const go_fish = new GameEnv([], [], GoFishPlayer, { deck, discard })
+const go_fish_env = new GameEnv([], [], GoFishPlayer, { deck, discard })
+const go_fish_game1 = go_fish_env.new_game

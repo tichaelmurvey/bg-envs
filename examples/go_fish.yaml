@@ -1,0 +1,37 @@
+meta:
+    name: Go Fish
+    player_min: 2
+    player_max: 7
+
+phases:
+    game_start:
+        deal: 7
+    game_play:
+        loop: forever
+        turn_order: default
+        allowed_moves:
+            - ask_for_suit
+
+prefabs:
+    - card_game_base
+
+custom_moves:
+    ask_for_suit:
+        input: choose SUIT and TARGET_PLAYER
+        req: ME has SUIT
+        effect: try_steal_suit SUIT from TARGET_PLAYER
+
+custom_passives:
+    - victory_on_empty_hand
+    - play_set:
+          trigger: ME has 4 of any RANK
+          effect: play_on_table all of ME RANK
+
+custom_effects:
+    - try_steal_suit:
+          input: try_steal_suit SUIT from TARGET_PLAYER
+          check: TARGET_PLAYER has SUIT
+          true: from TARGET_PLAYER move all SUIT to ME
+              new turn for ME
+          false: draw 1 for ME
+              end_turn
