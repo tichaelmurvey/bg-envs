@@ -6,8 +6,9 @@ class CardGamePlayer extends Player {
     hand: Hand = new Hand()
 }
 
-class CardGameBase extends GameEnv {
-    player = CardGamePlayer
+export class CardGameBase extends GameEnv {
+    public player = CardGamePlayer
+
     constructor(config: GameEnvParams) {
         super(config);
         this.actions = [...this.actions, 'deal'];
