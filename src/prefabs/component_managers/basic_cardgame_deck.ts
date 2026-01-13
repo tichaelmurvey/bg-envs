@@ -1,10 +1,9 @@
-import { Deck } from "../component_management/deck"
-import Component from "../components/component";
-import Player from "../core/player";
-import BASIC_52 from "../data/basic_52";
-import { hasOwn } from "../utils/type_utils";
+import { Deck } from "../../component_management/deck"
+import Component from "../../components/component";
+import Player from "../../core/player";
+import BASIC_52 from "../../data/basic_52";
 import { Hand } from "./hand";
-import PlayingCard from "./playing_card";
+import PlayingCard from "../components/playing_card";
 
 class CardHand extends Hand {
     items: PlayingCard[] = []

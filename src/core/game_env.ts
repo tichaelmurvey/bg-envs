@@ -3,20 +3,36 @@ import { Action } from "./action/action"
 import { Phase } from "./phase"
 import Player from "./player"
 
+export type GameEnvParams = Partial<{
+    phases: Phase[],
+    actions: Action[],
+    player: typeof Player,
+    player_min: Number,
+    player_max: Number,
+    component_starting_state: ComponentState
+}>
+
 class GameEnv {
-    constructor(
-        public phases: Phase[],
-        public actions: Action[],
-        public player: typeof Player,
-        public component_starting_state: ComponentState
-    ) { }
+    public phases: Phase[] = []
+    public actions: Action[] = []
+    public player: typeof Player = Player
+    public player_min: Number = 2
+    public player_max: Number = 7
+    public component_starting_state: ComponentState = {}
+
+    constructor(config: GameEnvParams) {
+        Object.assign(this, config);
+    }
 
     new_game(n_players: number = 2) {
         return new GameInstance(this, n_players)
     }
+
+    glossary = {
+    }
 }
 
-class GameInstance {
+export class GameInstance {
     component_state: ComponentState
     players: Player[] = []
     constructor(

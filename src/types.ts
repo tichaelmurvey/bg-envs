@@ -2,6 +2,7 @@ import { ComponentManager } from "./component_management/types";
 import Component from "./components/component";
 
 export type LocationRef = string
+export type PlayerMove = string[] & { __brand: "player_move" }
 
 export type GameObject = Component | ComponentManager
 export type ComponentState = Record<string, GameObject>

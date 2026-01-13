@@ -1,4 +1,4 @@
-import PlayingCard from "../prefabs/playing_card"
+import PlayingCard from "../prefabs/components/playing_card"
 import { PCardSuit, PCardVal } from "../types"
 import rng, { rng_range } from "../utils/rng"
 

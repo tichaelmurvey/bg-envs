@@ -1,20 +1,13 @@
+import Player from "../../core/player"
 import { PCardSuit, PCardVal } from "../../types"
 import { EnumValue } from "../../utils/type_utils"
 
-export type ComponentNameString = string
-export type EnvMethodString = string
-export type PseudocodeString = "and" | "or" | "has" | "any" | "of" | "from" | "move" | "all" | "to" | "for"
+export type EnvObjectRefString = string & { readonly __brand: 'component' }
+export type EnvMethodString = string & { readonly __brand: 'env_method' }
+export type PseudocodeString = "and" | "or" | "has" | "any" | "of" | "from" | "move" | "all" | "to" | "for" | string & { readonly __brand: 'pseudo' }
 
-export type SymbolFromYAML = (ComponentNameString | EnvMethodString | PseudocodeString)
+export type SymbolFromYAML = (EnvObjectRefString | EnvMethodString | PseudocodeString)
 export type ExecutableFromYAML = SymbolFromYAML[]
+export type ConditionalFromYAML = (PseudocodeString | EnvObjectRefString)[]
 
-export type Glossary = Record<SymbolFromYAML, any>
-
-
-
-const x: Glossary = {
-    "SUIT": PCardSuit,
-    "ehee": 0,
-}
-
-console.log(x)
+export type Glossary = Record<EnvObjectRefString, any>

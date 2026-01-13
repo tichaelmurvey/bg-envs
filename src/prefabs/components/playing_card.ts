@@ -1,5 +1,5 @@
-import Component from "../components/component";
-import { PCardSuit, PCardVal } from "../types";
+import Component from "../../components/component";
+import { PCardSuit, PCardVal } from "../../types";
 
 export default class PlayingCard extends Component {
     suit: PCardSuit

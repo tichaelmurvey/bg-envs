@@ -8,7 +8,7 @@ phases:
         deal: 7
     game_play:
         loop: forever
-        turn_order: default
+        turn_order: circle
         allowed_moves:
             - ask_for_suit
 
