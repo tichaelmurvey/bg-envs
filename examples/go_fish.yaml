@@ -17,7 +17,7 @@ prefabs:
 
 custom_moves:
     ask_for_suit:
-        input: choose SUIT and TARGET_PLAYER
+        choose: choose SUIT and TARGET_PLAYER
         req: ME has SUIT
         effect: try_steal_suit SUIT from TARGET_PLAYER
 

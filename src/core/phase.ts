@@ -1,26 +1,33 @@
+import { config } from "process"
 import { PlayerMove } from "../types"
 import { Action } from "./action/action"
-
-export type PhaseParams = Partial<{
-    name: string
-    loop: "forever" | number
-    phases: Phase[]
-}>
+import { GameInstance } from "./game_env"
 
 export class Phase {
-    public name: string = "anon_phase"
-    public loop: "forever" | number | undefined
-    public phases: Phase[] | undefined
+    name: string = "base_phase"
+    loop: "forever" | number | undefined
+    phases: Phase[] | undefined
+    phase_data: undefined
+    gst: GameInstance
+    [x: string]: unknown
 
-    constructor(config: PhaseParams) {
-        Object.assign(this, config)
+    constructor(gst: GameInstance) {
+        this.gst = gst
+    }
+}
+
+export class GameStart extends Phase {
+    constructor(gst: GameInstance) {
+        super(gst)
+        this.name = "game_start"
+        gst.game_running = true
     }
 }
 
 export class PlayerMovePhase extends Phase {
-    public allowed_moves: PlayerMove[] = []
-    constructor(config: PhaseParams & { allowed_moves: PlayerMove[] }) {
-        super(config)
-        this.allowed_moves = config.allowed_moves
+    constructor(gst: GameInstance,
+        public allowed_moves: PlayerMove[]
+    ) {
+        super(gst)
     }
 }

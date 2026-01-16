@@ -15,3 +15,7 @@ export class SequentialTurns extends Phase {
         this.current_player = next_item(this.players, this.current_player)
     }
 }
+
+export function is_sequential_turns(phase: Phase): phase is SequentialTurns {
+    return phase instanceof SequentialTurns
+}

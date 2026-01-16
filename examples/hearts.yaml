@@ -39,7 +39,7 @@ custom_variables:
 
 custom_moves:
     pass_three:
-        input: choose 3 CARDS as SELECTION
+        choose: 3 CARDS as SELECTION
         effect:
             check: CURRENT_ROUND is ODD
             true: from ME move SELECTION to LEFT_PLAYER

@@ -6,3 +6,5 @@ export function hasOwn<T extends object, K extends PropertyKey>(
 }
 
 export type EnumValue<T extends Record<string, string | number>> = T[keyof T];
+
+export function get_keys<T extends Object>(obj: T) { Object.keys(obj) as Array<keyof T> }
