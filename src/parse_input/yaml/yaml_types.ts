@@ -1,5 +1,6 @@
 import Component from "../../components/component"
 import { Action } from "../../core/action/action"
+import { Phase } from "../../core/phase"
 import Player from "../../core/player"
 import { PCardSuit, PCardVal } from "../../types"
 import { EnumValue } from "../../utils/type_utils"
@@ -24,7 +25,7 @@ export type ExecutableFromYAML = EnvObjectRefString | EnvMethodRefString | Pseud
 
 export type ConditionalFromYAML = (PseudoConditionalString | EnvObjectRefString)[]
 
-export type ComponentQuery = (...args: any[]) => Component | Player
+export type ComponentQuery = (...args: any[]) => Component | Component[] | Player | Player[] | Phase
 export type ConditionalWithComponents = (PseudoConditionalString | ComponentQuery)[]
 
 export type Glossary = {

@@ -3,23 +3,26 @@ meta:
     player_min: 2
     player_max: 7
 
-prefabs:
-    - base: card_game_tricks
-      follow_suit: true
-      aces_high: true
-      pass_lead_to: winner
+base_game:
+    name: card_game_tricks
+    follow_suit: true
+    aces_high: true
+    pass_lead_to: winner
 
-    - player_points:
+prefabs:
+    - name: player_points
       trigger_game_end: 100
       overflow: true
       golf_rules: true
 
 phases:
-    - game_round:
+    - name: game_round
       loop: forever
       phases:
-          - name: game_start
-            deal: all
+          - name: round_start
+            game_actions:
+                - name: deal
+                  target: all
 
           - name: pass_cards
             turn_order: simultaneous
@@ -27,7 +30,8 @@ phases:
                 - pass_three
 
           - name: trick_play
-          - name: score_round:
+          - name: score_round
+            scoring:
                 - QUEEN of SPADES: 13
                 - each HEARTS: 1
                 - all HEARTS and QUEEN of SPADES:

@@ -37,7 +37,7 @@ export type PhaseTree = { prototype: Phase, data: unknown, current_phase?: Phase
 export class GameInstance {
     component_state: ComponentState
     players: Player[] = []
-    current_phase_root: Phase
+    current_phase: Phase
     game_running: boolean = false
     constructor(
         readonly game_env: GameEnv,
@@ -45,13 +45,17 @@ export class GameInstance {
     ) {
         this.component_state = structuredClone(this.game_env.component_starting_state)
         this.define_players()
-        this.current_phase_root = new game_env.phases[0](this)
+        this.current_phase = new game_env.phases[0](this)
     }
 
     define_players() {
         for (let i = 0; i < this.n_players; i++) {
             this.players.push(new this.game_env.player(`Player ${i + 1}`, i))
         }
+    }
+
+    get_active_phase() {
+        return this.current_phase.get_active_phase()
     }
 }
 

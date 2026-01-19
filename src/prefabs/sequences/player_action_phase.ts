@@ -1,16 +1,12 @@
 import { Action } from "../../core/action/action"
 import { GameInstance } from "../../core/game_env"
 import { Phase } from "../../core/phase"
+import { PlayerMove } from "../../types"
 
-export class GameActionPhase extends Phase {
-    public game_actions: Action[] = []
+export class PlayerMovePhase extends Phase {
+    public allowed_moves: PlayerMove[] = []
     constructor(gst: GameInstance) {
         super(gst)
     }
 
-    run() {
-        this.game_actions.forEach(action => {
-            //TODO: Execute action
-        })
-    }
 }
