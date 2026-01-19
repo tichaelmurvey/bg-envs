@@ -1,0 +1,25 @@
+meta:
+    name: Example game
+    player_min: 2
+    player_max: 7
+
+custom_components:
+    - name: Initiative tracker
+      type: token
+    - name: Worker
+      type: meeple
+      colors:
+          - red
+          - green
+          - blue
+          - purple
+      number: 5
+    - name: victory tracker
+      type: token
+
+    - name: Action cards
+      type: deck
+      contents:
+          - name: Action card
+            type: card
+            text: Some action text

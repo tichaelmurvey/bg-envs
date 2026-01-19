@@ -1,5 +1,6 @@
 import Component from "../../components/component";
 import { GameInstance } from "../../core/game_env";
+import { Check } from "../../types";
 import { break_at } from "../../utils/break_array_at";
 import { get_keys } from "../../utils/type_utils";
 import { ComponentGlossary, ComponentQuery, ConditionalFromYAML, ConditionalWithComponents, EnvMethodRefString, EnvObjectRefString, Glossary, PseudoConditionalString } from "./yaml_types";
@@ -23,8 +24,6 @@ ME has less than 4 CARDS
 any PLAYER has more than 3 POINTS
 no PLAYER has GOLD or SILVER
 */
-
-type Check = (gs: GameInstance, ...args: any[]) => boolean
 
 export function parse_conditional(cond_str_list: ConditionalFromYAML, comp_glossary: ComponentGlossary, input_vars: string[]): Check {
 

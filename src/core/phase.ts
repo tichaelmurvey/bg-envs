@@ -1,5 +1,4 @@
-import { config } from "process"
-import { PlayerMove } from "../types"
+import { PlayerMoveName } from "../types"
 import { Action } from "./action/action"
 import { GameInstance } from "./game_env"
 
@@ -7,7 +6,7 @@ export class Phase {
     name: string = "base_phase"
     loop: "forever" | number | undefined
     times_called: number = 0
-    phases: Phase[] | undefined
+    phases: (typeof Phase)[] | undefined
     active_phase: Phase | undefined
     phase_data: undefined
     gst: GameInstance

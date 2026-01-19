@@ -1,24 +1,30 @@
 import Component from "../components/component";
 import { shuffle } from "../utils/rng";
+import { ComponentManager } from "./component_manager";
 
-export class Deck {
+export class Deck extends ComponentManager {
+    contents: Component[]
     constructor(
-        public name?: string,
-        public items: Component[] = [],
-    ) { }
+        name: string,
+        contents: Component[] = [],
+    ) {
+        super();
+        this.name = name
+        this.contents = contents
+    }
 
     shuffle() {
-        shuffle(this.items)
+        shuffle(this.contents)
     }
 
     draw(): Component | null {
-        if (this.items.length == 0) {
+        if (this.contents.length == 0) {
             this.handle_empty()
         }
-        if (this.items.length == 0) {
+        if (this.contents.length == 0) {
             return null;
         }
-        return this.items.pop()!;
+        return this.contents.pop()!;
     }
 
     draw_n(n: number): Component[] {
@@ -34,7 +40,7 @@ export class Deck {
 
     add(item: Component | null) {
         if (item == null) return;
-        this.items.push(item)
+        this.contents.push(item)
     }
 
     handle_empty() {

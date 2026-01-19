@@ -13,4 +13,4 @@ class GoFishPlayer extends Player {
 const go_fish_env = new CardGameBaseEnv({
     phases: [GameStart, SequentialTurns]
 })
-const go_fish_game1 = go_fish_env.new_game
+const go_fish_game = go_fish_env.new_game()

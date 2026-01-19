@@ -4,11 +4,12 @@ import { GameStart, Phase } from "./phase"
 import Player from "./player"
 
 export type GameEnvParams = Partial<{
-    phases: [typeof GameStart, ...(typeof Phase)[]],
+    phases: (typeof Phase)[],
     actions: Action[],
     player: typeof Player,
     player_min: Number,
     player_max: Number,
+    custom_vars: Record<string, string | boolean | number>
     component_starting_state: ComponentState
 }>
 
@@ -19,7 +20,7 @@ class GameEnv {
     player_min: Number = 2
     player_max: Number = 7
     component_starting_state: ComponentState = {}
-
+    custom_vars = {}
     constructor(config: GameEnvParams) {
         Object.assign(this, config);
     }

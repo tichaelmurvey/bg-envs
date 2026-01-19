@@ -1,8 +1,19 @@
+import { ComponentRule, ComponentTypes } from "../types";
+
 class Component {
     name: string | undefined;
-    foo: number = 3
-    constructor(name?: string) {
-        this.name = name;
+    type: ComponentTypes
+    color: string | undefined
+    constructor(
+        params: {
+            name: string,
+            type: ComponentTypes,
+            color?: string
+        }
+    ) {
+        this.name = params.name;
+        this.type = params.type;
+        this.color = params.color;
     }
 }
 
