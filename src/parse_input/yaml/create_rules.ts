@@ -35,7 +35,7 @@ export function create_env_from_yaml(path: string) {
     //Custom components 
     const user_defined_components: Record<string, GameObject> = {}
     for (const key in rules.custom_components) {
-        user_defined_components[key] = parse_components(rules.custom_components[key])
+        Object.assign(user_defined_components, parse_components(rules.custom_components[key]))
     }
     const component_starting_state = Object.assign(BaseGameEnv.prototype.component_starting_state, user_defined_components)
 

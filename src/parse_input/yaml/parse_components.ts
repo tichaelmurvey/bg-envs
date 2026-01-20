@@ -2,7 +2,7 @@ import { ComponentRule, GameObject } from "../../types";
 import Component from "../../components/component";
 import { COMPONENT_MANAGERS } from "../../prefabs/component_managers/component_managers_list";
 
-export default function parse_components(component_def: ComponentRule): GameObject[] {
+export default function parse_components(component_def: ComponentRule): Record<string, GameObject> {
     console.log("constructing new component")
 
     //Check if component container or component
@@ -12,11 +12,14 @@ export default function parse_components(component_def: ComponentRule): GameObje
             throw new Error("Component manager type not recognised: " + component_def.type)
         }
         const Manager = COMPONENT_MANAGERS[component_def.type]
-        const contents = component_def.contents.flatMap(parse_components)
-        return [new Manager(
-            component_def.name,
-            contents
-        )]
+        const contents = component_def.contents.flatMap(comp_def => Object.values(parse_components(comp_def)))
+        const name = component_def.name
+        return {
+            name: new Manager(
+                component_def.name,
+                contents
+            )
+        }
     }
 
     //handle simple component case
@@ -24,10 +27,10 @@ export default function parse_components(component_def: ComponentRule): GameObje
     //Handle multiple colors
     if (component_def.colors) {
         console.log("component needs multiple colors")
-        const components: Component[] = []
+        const components: Record<string, Component> = {}
         for (const current_color of component_def.colors) {
             console.log("creating components for color " + current_color)
-            components.push(...define_component_batch({
+            Object.assign(components, define_component_batch({
                 color: current_color,
                 ...component_def
             }))
@@ -41,17 +44,18 @@ export default function parse_components(component_def: ComponentRule): GameObje
 
 function define_component_batch(component_def: ComponentRule) {
     console.log("defining component batch")
-    const components: Component[] = []
+    const components: Record<string, Component> = {}
     const number = component_def.number || 1
     console.log("Creating " + number + " instances")
     for (let i = 0; i < number; i++) {
-        components.push(new Component(
+        const key = `${component_def.name}_${component_def.color}_${i}`
+        components[key] = new Component(
             {
-                name: component_def.name,
+                name: key,
                 type: component_def.type,
                 color: component_def.color
             }
-        ))
+        )
     }
     console.log("created components! " + components)
     return components
