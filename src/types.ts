@@ -8,28 +8,31 @@ export type PlayerMoveName = string[] & { __brand: "player_move" }
 
 export type GameObject = Component | ComponentManager
 export type ComponentState = Record<string, GameObject>
+export type Action = (args?: any) => any
+
+export type EnumType = { [key: string]: string | number };
 
 export enum PCardSuit {
-    Hearts,
-    Diamonds,
-    Spades,
-    Clubs
+    HEART,
+    DIAMOND,
+    SPADE,
+    CLUB
 }
 
-export enum PCardVal {
-    Ace = 1,
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
-    Ten,
-    Jack,
-    Queen,
-    King
+export enum PCardRank {
+    ACE = 1,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE,
+    TEN,
+    JACK,
+    QUEEN,
+    KING
 }
 
 export type Constructor = new (...args: any[]) => {};
@@ -76,7 +79,7 @@ export type EffectRule = string | {
     false?: string
 }
 
-export type ComponentTypes = "meeple" | "token"
+export type ComponentTypes = "meeple" | "token" | "card"
 
 export type ComponentRule = {
     name: string

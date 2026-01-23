@@ -1,15 +1,18 @@
 import Component from "../../components/component";
-import { PCardSuit, PCardVal } from "../../types";
+import { PCardSuit, PCardRank } from "../../types";
 
 export default class PlayingCard extends Component {
     suit: PCardSuit
-    val: PCardVal
+    rank: PCardRank
     readable: string
 
-    constructor(suit: PCardSuit, val: PCardVal) {
-        super()
+    constructor(suit: PCardSuit, rank: PCardRank) {
+        super({
+            name: `${rank} of ${suit}`,
+            type: "card"
+        })
         this.suit = suit
-        this.val = val
-        this.readable = `${PCardVal[this.val]} of ${PCardSuit[this.suit]}`
+        this.rank = rank
+        this.readable = `${PCardRank[this.rank]} of ${PCardSuit[this.suit]}`
     }
 }

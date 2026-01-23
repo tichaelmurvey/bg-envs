@@ -1,14 +1,15 @@
 import Component from "../../components/component"
-import { Action } from "../../core/action/action"
+import { PlayerMove } from "../../core/action/player_move"
+import { Effect } from "../../core/effect"
 import { Phase } from "../../core/phase"
 import Player from "../../core/player"
-import { PCardSuit, PCardVal } from "../../types"
+import { Action, PCardSuit, PCardRank } from "../../types"
 import { EnumValue } from "../../utils/type_utils"
 
 export type EnvObjectRefString = string & { readonly __brand: 'component' }
 export type EnvMethodRefString = string & { readonly __brand: 'env_method' }
 
-export const PSEUDO_METHOD_EXEC_LITERALS = ["and", "then", "move", "from", "each", "of"] as const;
+export const PSEUDO_METHOD_EXEC_LITERALS = ["and", "then", "set", "move", "from", "to", "each", "of",] as const;
 export type PseudoMethodExecString =
     | typeof PSEUDO_METHOD_EXEC_LITERALS[number]
     | `${number}`;
@@ -33,7 +34,9 @@ export type Glossary = {
     components: ComponentGlossary
 }
 
-
+export type CustomVars = Record<string, string | number | boolean>
+export type EffectGlossary = Record<string, Effect>
 export type ActionGlossary = Record<EnvMethodRefString, Action>
+export type MoveGlossary = Record<string, PlayerMove>
 export type ComponentGlossary = Record<EnvObjectRefString, ComponentQuery>
 

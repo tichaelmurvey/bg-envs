@@ -1,5 +1,4 @@
 import { PlayerMoveName } from "../types"
-import { Action } from "./action/action"
 import { GameInstance } from "./game_env"
 
 export class Phase {

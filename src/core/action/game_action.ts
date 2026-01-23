@@ -1,6 +1,5 @@
 import { Effect } from "../effect";
-import { Action } from "./action";
 
-export class GameAction extends Action {
+export class GameAction extends Effect {
     name: string = "base_game_action"
 }

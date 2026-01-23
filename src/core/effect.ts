@@ -1,8 +1,9 @@
+import { Action } from "../types"
 
 export class Effect {
     constructor(
         public name: string,
-        public resolve_func: (args?: any) => any
+        public resolve_func: Action
     ) { }
 
     resolve(args?: any) {

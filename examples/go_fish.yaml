@@ -31,7 +31,5 @@ custom_effects:
     - name: try_steal_suit
       input: try_steal_suit SUIT from TARGET_PLAYER
       check: TARGET_PLAYER has SUIT
-      true: from TARGET_PLAYER move all SUIT to ME
-          new turn for ME
-      false: draw 1 for ME
-          end_turn
+      true: from TARGET_PLAYER move all SUIT to ME then new_turn for ME
+      false: draw 1 for ME then end_turn

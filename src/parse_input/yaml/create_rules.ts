@@ -16,6 +16,7 @@ import { GameObject, PhaseRules, PlayerMoveName, Rulebook } from "../../types";
 import parse_components from "./parse_components";
 import parse_effect from "./parse_effect";
 import { yamlFileToObj } from "./yaml_to_obj";
+import { CustomVars, EffectGlossary } from "./yaml_types";
 
 export function create_env_from_yaml(path: string) {
     //TODO: Validate yaml structure
@@ -28,26 +29,28 @@ export function create_env_from_yaml(path: string) {
         BaseGameEnv = BASE_GAMES[rules.base_game.name].game
     }
 
-
     //Custom variables
-    const custom_vars = Object.assign(BaseGameEnv.prototype.custom_vars, rules.custom_variables)
+    const custom_vars: CustomVars = Object.assign(BaseGameEnv.prototype.custom_vars, rules.custom_variables)
 
     //Custom components 
     const user_defined_components: Record<string, GameObject> = {}
     for (const key in rules.custom_components) {
         Object.assign(user_defined_components, parse_components(rules.custom_components[key]))
     }
-    const component_starting_state = Object.assign(BaseGameEnv.prototype.component_starting_state, user_defined_components)
+
+    const component_glossary = Object.assign(BaseGameEnv.prototype.component_glossary, user_defined_components)
 
     //TODO: Custom effects
-    const custom_effects: Record<string, Effect> = {}
+    const custom_effects: EffectGlossary = {}
     for (const key in rules.custom_effects) {
-        custom_effects[key] = parse_effect(rules.custom_effects[key])
+        custom_effects[key] = parse_effect(rules.custom_effects[key], custom_vars)
     }
+
+    const effect_glossary = Object.assign(BaseGameEnv.prototype.effect_glossary, custom_effects)
 
     //TODO: Custom moves
     const custom_moves: Record<string, PlayerMove> = {}
-
+    const move_glossary = Object.assign(BaseGameEnv.prototype.move_glossary, custom_moves)
     //TODO: custom_passives
     const custom_passives = []
 
@@ -62,8 +65,9 @@ export function create_env_from_yaml(path: string) {
         player_max: rules.meta.player_max,
         phases,
         custom_vars,
-        component_starting_state,
-
+        component_glossary,
+        effect_glossary,
+        move_glossary
     })
 
 }
