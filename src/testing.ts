@@ -1,6 +1,5 @@
-import { CardGameBaseEnv } from "./prefabs/game_bases/card_game_base";
+import { PCardSuit } from "./data/basic_52";
+import PlayingCard from "./prefabs/components/playing_card";
 
-const game = new CardGameBaseEnv({})
-const game_instance = game.new_game()
-console.log(game_instance.game_env.custom_consts)
-console.log(game_instance.game_env.custom_consts["ACE"])
+
+console.log(PCardSuit["HEART"], PCardSuit[0])

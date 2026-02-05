@@ -1,39 +1,18 @@
 import { ComponentManager } from "./component_management/component_manager";
 import Component from "./components/component";
+import GameObject from "./components/game_object";
 import { Effect } from "./core/effect";
 import { GameInstance } from "./core/game_env";
+import { Phase } from "./core/phase";
+import Player from "./core/player";
 
 export type LocationRef = string
 export type PlayerMoveName = string[] & { __brand: "player_move" }
 
-export type GameObject = Component | ComponentManager
 export type ComponentState = Record<string, GameObject>
-export type Action = (args?: any) => any
+export type Action = (gst: GameInstance, live_inputs?: Record<string, GameObject>) => void
 
 export type EnumType = { [key: string]: string | number };
-
-export enum PCardSuit {
-    HEART,
-    DIAMOND,
-    SPADE,
-    CLUB
-}
-
-export enum PCardRank {
-    ACE = 1,
-    TWO,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE,
-    TEN,
-    JACK,
-    QUEEN,
-    KING
-}
 
 export type Constructor = new (...args: any[]) => {};
 
@@ -108,4 +87,7 @@ export type Rulebook = {
     custom_blockers: Record<string, BlockerRule>
 }
 
-export type Check = (gs: GameInstance, ...args: any[]) => boolean
+export type Check = (gst: GameInstance, args?: {
+    left_operands: unknown[],
+    right_operands: unknown[]
+}) => boolean

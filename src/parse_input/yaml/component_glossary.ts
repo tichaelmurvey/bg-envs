@@ -4,10 +4,10 @@ import { Phase } from "../../core/phase";
 import Player from "../../core/player";
 import { CardGameBaseEnv } from "../../prefabs/game_bases/card_game_base";
 import { SequentialTurns } from "../../prefabs/sequences/turns/sequential_turns";
-import { ComponentGlossary, ComponentQuery, EnvObjectRefString } from "./yaml_types";
+import { GameObjectLookups, GameObjQuery, EnvObjectRefString } from "./yaml_types";
 
 type k = EnvObjectRefString
-export const PRESET_COMPONENT_GLOSSARY: ComponentGlossary = {
+export const PRESET_COMPONENT_GLOSSARY: GameObjectLookups = {
     ["ME" as k]: (gs: GameInstance) => {
         if (!(gs.current_phase instanceof SequentialTurns) || gs.current_phase.current_player === undefined) {
             throw new Error("Tried to find ME on phase without current_player")

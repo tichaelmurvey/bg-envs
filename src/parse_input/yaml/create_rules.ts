@@ -1,4 +1,4 @@
-import Component from "../../components/component";
+import GameObject from "../../components/game_object";
 import { GameAction } from "../../core/action/game_action";
 import { PLAYER_MOVES } from "../../core/action/moves_list";
 import { PlayerMove } from "../../core/action/player_move";
@@ -8,67 +8,65 @@ import { GameStart, Phase } from "../../core/phase";
 import { ACTIONS_LIST } from "../../prefabs/actions/actions_list";
 import { BASE_GAMES } from "../../prefabs/game_bases/base_game_list";
 import { GameActionPhase } from "../../prefabs/sequences/game_action_phase";
-import { PHASE_PREFABS } from "../../prefabs/sequences/phase_list";
-import { PlayerMovePhase } from "../../prefabs/sequences/player_action_phase";
 import { SequentialTurns } from "../../prefabs/sequences/turns/sequential_turns";
 import { SimulTurns } from "../../prefabs/sequences/turns/simul_turns";
-import { GameObject, PhaseRules, PlayerMoveName, Rulebook } from "../../types";
+import { PhaseRules, PlayerMoveName, Rulebook } from "../../types";
 import parse_components from "./parse_components";
 import parse_effect from "./parse_effect";
 import { yamlFileToObj } from "./yaml_to_obj";
-import { CustomVars, EffectGlossary } from "./yaml_types";
+import { ComponentGlossary, CustomVars, EffectGlossary, MoveGlossary } from "./yaml_types";
 
 export function create_env_from_yaml(path: string) {
+
     //TODO: Validate yaml structure
     const rules = yamlFileToObj<Rulebook>(path);
 
     let BaseGameEnv = GameEnv;
-    let base_game_data;
+
+    //Load base game
     if (rules.base_game && (rules.base_game.name in BASE_GAMES)) {
-        base_game_data = BASE_GAMES[rules.base_game.name]
         BaseGameEnv = BASE_GAMES[rules.base_game.name].game
+    } else if (rules.base_game) {
+        throw new Error(`Unknown base game: ${rules.base_game}`)
+    }
+
+    class NewGameEnv extends BaseGameEnv {
+        game_name = rules.meta.name
+        player_min = rules.meta.player_min
+        player_max = rules.meta.player_max
     }
 
     //Custom variables
-    const custom_vars: CustomVars = Object.assign(BaseGameEnv.prototype.custom_vars, rules.custom_variables)
+    Object.assign(NewGameEnv.prototype.custom_vars, rules.custom_variables)
 
     //Custom components 
-    const user_defined_components: Record<string, GameObject> = {}
+    const user_defined_components: ComponentGlossary = {}
     for (const key in rules.custom_components) {
         Object.assign(user_defined_components, parse_components(rules.custom_components[key]))
     }
 
-    const component_glossary = Object.assign(BaseGameEnv.prototype.component_glossary, user_defined_components)
+    Object.assign(NewGameEnv.prototype.component_glossary, user_defined_components)
 
-    //TODO: Custom effects
+    //Custom effects
     const custom_effects: EffectGlossary = {}
     for (const key in rules.custom_effects) {
-        custom_effects[key] = parse_effect(rules.custom_effects[key], custom_vars)
+        custom_effects[key] = parse_effect(rules.custom_effects[key], NewGameEnv.prototype.custom_vars)
     }
 
-    const effect_glossary = Object.assign(BaseGameEnv.prototype.effect_glossary, custom_effects)
+    Object.assign(NewGameEnv.prototype.effect_glossary, custom_effects)
 
-    //TODO: Custom moves
-    const custom_moves: Record<string, PlayerMove> = {}
-    const move_glossary = Object.assign(BaseGameEnv.prototype.move_glossary, custom_moves)
+    //Custom moves
+    const custom_moves: MoveGlossary = {}
+    Object.assign(BaseGameEnv.prototype.move_glossary, custom_moves)
+
     //TODO: custom_passives
     const custom_passives = []
 
     //TODO: custom_blockers
     const custom_blockers = []
 
-    const prefab_phases = BaseGameEnv.prototype.phases
-    const phases = create_phases(rules.phases, base_game_data?.prefab_phases)
-
-    const game_env = new BaseGameEnv({
-        player_min: rules.meta.player_min,
-        player_max: rules.meta.player_max,
-        phases,
-        custom_vars,
-        component_glossary,
-        effect_glossary,
-        move_glossary
-    })
+    const prefab_phases = NewGameEnv.prototype.phases
+    const phases = create_phases(rules.phases)
 
 }
 

@@ -1,5 +1,5 @@
 import Component from "../../components/component";
-import { PCardSuit, PCardRank } from "../../types";
+import { PCardRank, PCardSuit } from "../../data/basic_52";
 
 export default class PlayingCard extends Component {
     suit: PCardSuit
@@ -13,6 +13,9 @@ export default class PlayingCard extends Component {
         })
         this.suit = suit
         this.rank = rank
+        this.identity_attributes = {
+            suit, rank
+        }
         this.readable = `${PCardRank[this.rank]} of ${PCardSuit[this.suit]}`
     }
 }

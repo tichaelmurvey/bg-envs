@@ -27,9 +27,9 @@ export class BasicCardDeck extends Deck {
     }
 
     handle_empty() {
-        if (this.refill.items.length == 0) return;
-        this.items = [...this.refill.items];
-        this.refill.items.length = 0;
+        if (this.refill.contents.length == 0) return;
+        this.contents = [...this.refill.contents];
+        this.refill.contents.length = 0;
         this.shuffle()
     }
 

@@ -1,4 +1,4 @@
-import { ActionGlossary, ComponentGlossary, CustomVars, EffectGlossary, MoveGlossary } from "../parse_input/yaml/yaml_types"
+import { ActionGlossary, GameObjectLookups, CustomVars, EffectGlossary, MoveGlossary, ComponentGlossary, CustomEnums } from "../parse_input/yaml/yaml_types"
 import { Action, ComponentState, EnumType } from "../types"
 import { GameStart, Phase } from "./phase"
 import Player from "./player"
@@ -9,7 +9,7 @@ export type GameEnvParams = Partial<{
     player_min: Number,
     player_max: Number,
     custom_vars: Record<string, string | boolean | number>
-    component_glossary: ComponentGlossary
+    component_glossary: GameObjectLookups
     effect_glossary: EffectGlossary
     action_glossary: ActionGlossary
     move_glossary: MoveGlossary
@@ -17,6 +17,7 @@ export type GameEnvParams = Partial<{
 }>
 
 class GameEnv {
+    game_name: string = "Default"
     phases: (typeof Phase)[] = [GameStart]
     player: typeof Player = Player
     player_min: Number = 2
@@ -26,8 +27,8 @@ class GameEnv {
     effect_glossary: EffectGlossary = {}
     action_glossary: ActionGlossary = {}
     move_glossary: MoveGlossary = {}
+    custom_enums: CustomEnums = {}
     custom_vars: CustomVars = {}
-    custom_consts: CustomVars = {}
     constructor(config: GameEnvParams) {
         Object.assign(this, config);
     }
@@ -48,7 +49,7 @@ export class GameInstance {
     current_phase: Phase
     game_running: boolean = false
     custom_vars: CustomVars = {}
-    component_glossary: ComponentGlossary = {}
+    component_glossary: GameObjectLookups = {}
     action_glossary: ActionGlossary = {}
     constructor(
         readonly game_env: GameEnv,

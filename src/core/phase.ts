@@ -1,7 +1,8 @@
+import GameObject from "../components/game_object"
 import { PlayerMoveName } from "../types"
 import { GameInstance } from "./game_env"
 
-export class Phase {
+export class Phase extends GameObject {
     name: string = "base_phase"
     loop: "forever" | number | undefined
     times_called: number = 0
@@ -12,6 +13,7 @@ export class Phase {
     [x: string]: unknown
 
     constructor(gst: GameInstance) {
+        super()
         this.gst = gst
     }
     get_active_phase(): Phase {

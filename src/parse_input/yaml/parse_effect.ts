@@ -13,7 +13,12 @@ export default function parse_effect(
 
     //handle case with pure action
     if (typeof rule === "string") {
-        return new Effect("anon", () => parse_action(rule, { custom_vars }))
+        return new Effect("anon", () => parse_action(rule, {
+            custom_vars,
+            custom_consts: {},
+            comp_lookups: {},
+            existing_effects: {}
+        }))
     }
 
     let input_vars: unknown[] = []
