@@ -31,7 +31,9 @@ any PLAYER has more than 3 POINTS
 no PLAYER has GOLD or SILVER
 */
 
-export function parse_conditional(cond_str_list: ConditionalFromYAML, comp_glossary: ComponentGlossary, custom_vars: CustomVars, custom_enums: CustomEnums): Check {
+
+type InputArgs = string[] | undefined
+export function parse_conditional(cond_str_list: ConditionalFromYAML, comp_glossary: ComponentGlossary, custom_vars: CustomVars, custom_enums: CustomEnums, input_args?: InputArgs): Check {
 
     const conditional_pseudos = only_lower_case(cond_str_list) as PseudoConditionalString[];
     if (!validate_only_conditional_pseudos(conditional_pseudos)) throw new Error()
@@ -39,16 +41,16 @@ export function parse_conditional(cond_str_list: ConditionalFromYAML, comp_gloss
     //Split ands
     if (cond_str_list.includes("and")) {
         const condition_lists = break_at("and", cond_str_list)
-        const checkers = condition_lists.map(cond => parse_atomic_conditional(cond, comp_glossary, custom_vars, custom_enums))
+        const checkers = condition_lists.map(cond => parse_atomic_conditional(cond, comp_glossary, custom_vars, custom_enums, input_args))
         return evaluate_checks_all(checkers)
     }
-    return parse_atomic_conditional(cond_str_list, comp_glossary, custom_vars, custom_enums)
+    return parse_atomic_conditional(cond_str_list, comp_glossary, custom_vars, custom_enums, input_args)
 }
 
 type ConditionalOperand = ReturnType<typeof resolve_operand_reference>
 
+function parse_atomic_conditional(cond_str_list: ConditionalFromYAML, comp_glossary: ComponentGlossary, custom_vars: CustomVars, custom_enums: CustomEnums, input_args: InputArgs): Check {
 
-function parse_atomic_conditional(cond_str_list: ConditionalFromYAML, comp_glossary: ComponentGlossary, custom_vars: CustomVars, custom_enums: CustomEnums): Check {
 
     //atomic checks around comparison operators "is", "has"
     const operator = confirm_single_condition(cond_str_list);
@@ -57,7 +59,7 @@ function parse_atomic_conditional(cond_str_list: ConditionalFromYAML, comp_gloss
     const condition_operand_ref = subj.slice(-1)[0]
 
     //get first term
-    let subj_operand = resolve_operand_reference(condition_operand_ref, comp_glossary, custom_vars, custom_enums)
+    let subj_operand = resolve_operand_reference(condition_operand_ref, comp_glossary, custom_vars, custom_enums, input_args)
 
     //split second operand by "or"
     const obj_array = break_at("or", obj)
@@ -66,19 +68,19 @@ function parse_atomic_conditional(cond_str_list: ConditionalFromYAML, comp_gloss
     for (const obj of obj_array) {
         if (obj.length > 1) throw new Error(`Expected single string operand, got ${obj}`)
         const ref = obj[0] as EnvObjectRefString
-        obj_operands.push(resolve_operand_reference(ref, comp_glossary, custom_vars, custom_enums))
+        obj_operands.push(resolve_operand_reference(ref, comp_glossary, custom_vars, custom_enums, input_args))
     }
 
     //create evaluation function based on operator
     if (operator === "is") {
         const evaluator: Check = (gst, args) => {
-            const evaluated_subj = resolve_indepdendent_operand(subj_operand, gst)
+            const evaluated_subj = resolve_indepdendent_operand(subj_operand, gst, args)
             for (const obj_operand of obj_operands) {
                 //case where object is a pure evaluator to run on the subject
                 if (obj_operand.type === "predef_evaluator") {
                     return obj_operand.func(evaluated_subj as any)
                 }
-                const evaluated_obj = resolve_indepdendent_operand(obj_operand, gst)
+                const evaluated_obj = resolve_indepdendent_operand(obj_operand, gst, args)
                 if (evaluated_subj === evaluated_obj) return true
             }
             return false
@@ -102,7 +104,16 @@ function parse_atomic_conditional(cond_str_list: ConditionalFromYAML, comp_gloss
     throw new Error("Incomplete")
 }
 
-function resolve_operand_reference(ref: string, components: ComponentGlossary, custom_vars: CustomVars, custom_enums: CustomEnums) {
+function resolve_operand_reference(ref: string, components: ComponentGlossary, custom_vars: CustomVars, custom_enums: CustomEnums, input_args: InputArgs) {
+
+    //check for context-provided input arguments
+    if (input_args) {
+        const index = input_args?.indexOf(ref)
+        if (index !== undefined && index >= 0) {
+            return { type: "input", func: (input: unknown[]) => input[index] } as const
+        }
+    }
+
     //check for literals
     const literal_val = convert_literal(ref)
     if (literal_val) return { type: "literal", value: literal_val } as const;
@@ -131,10 +142,11 @@ function resolve_operand_reference(ref: string, components: ComponentGlossary, c
 
 }
 
-function resolve_indepdendent_operand(operand: ConditionalOperand, gst: GameInstance) {
+function resolve_indepdendent_operand(operand: ConditionalOperand, gst: GameInstance, args?: unknown[]) {
     if (operand.type === "literal") return operand.value;
     if (operand.type === "component") return operand.value;
     if (operand.type === "game_var") return operand.func(gst);
+    if (operand.type === "input") return operand.func(args!)
     if (operand.type === "enum_ref") return operand.enum_value
 }
 

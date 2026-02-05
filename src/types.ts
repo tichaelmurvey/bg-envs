@@ -87,7 +87,4 @@ export type Rulebook = {
     custom_blockers: Record<string, BlockerRule>
 }
 
-export type Check = (gst: GameInstance, args?: {
-    left_operands: unknown[],
-    right_operands: unknown[]
-}) => boolean
+export type Check = (gst: GameInstance, args?: unknown[]) => boolean

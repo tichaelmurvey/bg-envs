@@ -7,6 +7,7 @@ import { SequentialTurns } from '../../prefabs/sequences/turns/sequential_turns'
 
 /*
 Example conditionals:
+SOME_PLAYER_INPUT is 3
 ME has HEARTS
 ME has EIGHT of DIAMONDS
 ME has CARD
@@ -59,4 +60,16 @@ test(`${str2} function evaluates to True when CURRENT_ROUND is 3`, () => {
     const conditional = parse_conditional(str2.split(" ") as ConditionalFromYAML, {}, { CURRENT_ROUND: 0 }, {});
     const evaluation_result = conditional(test_game_instance_2)
     expect(evaluation_result).toBe(true);
+})
+
+const str3 = "SOME_PLAYER_INPUT is 3"
+test(`${str3} resolves to function`, () => {
+    const conditional = parse_conditional(str3.split(" ") as ConditionalFromYAML, {}, {}, {}, ["SOME_PLAYER_INPUT"])
+    expect(typeof conditional).toBe("function")
+})
+
+test(`${str3} evaluates correctly`, () => {
+    const is_three = parse_conditional(str3.split(" ") as ConditionalFromYAML, {}, {}, {}, ["SOME_PLAYER_INPUT"])
+    expect(is_three(test_game_instance, [2])).toBe(false)
+    expect(is_three(test_game_instance, [3])).toBe(true)
 })
